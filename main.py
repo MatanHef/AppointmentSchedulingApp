@@ -45,6 +45,7 @@ class LoginWindow(Screen):
         else:
             self.wrong_num = 'Invalid phone number'
             self.user_phone.text=''
+            
 class CreateAccount(Screen):
 
     user_name = ObjectProperty(None)
@@ -69,6 +70,7 @@ class CreateAccount(Screen):
             self.wrong_num = 'invalid phone number or name'
             phone=''
             name=''
+            
 class MainScreen(Screen):
     grid = ObjectProperty()
 
@@ -102,7 +104,6 @@ class MainScreen(Screen):
                     (start_time_work_h * 60 + start_time_work_m + i * appo_time) % 60)
                 day[appo] = None        # None is default for unscheduled appointment
             weekly_sched[d.strftime('%a,%d/%m')] = day
-        print(weekly_sched)
         return weekly_sched
 
     def main(self):
@@ -115,7 +116,6 @@ class MainScreen(Screen):
        '''
         self.table = self.update_appos(self.table)
         for day in self.table:
-            print(day)
             tab= TabbedPanelItem(text=f'{day}' ,on_press= self.appo_day_change) #add the tab
             b=ScrollView(size=(Window.width, Window.height))    #add option to scroll
             box= GridLayout(cols=1, spacing=10, size_hint_y=None)
@@ -132,6 +132,7 @@ class MainScreen(Screen):
             b.add_widget(box)
             self.grid.add_widget(tab)
         return self.grid
+        
     def update_appos(self,table):
         '''
         adjust appointments from schedule file to weekly schedule dictionary
@@ -152,6 +153,7 @@ class MainScreen(Screen):
             if ((int(appo[:2]) < int(time_now[:2])+1) and (self.table[today][appo] == None)):
                 table[today][appo] = ''
         return table
+        
     def appo_day_change(self,day):
         self.appo_day = day
 
@@ -174,6 +176,7 @@ class MainScreen(Screen):
         confirm_btn.bind(on_press= self.appo_confirm)
         back_btn_.bind(on_press= self.popup.dismiss)
         return
+        
     def appo_confirm(self,x):
         '''add time appointment and name to schedule file'''
         self.popup.dismiss()
@@ -216,7 +219,6 @@ class HomePage(Screen):
                 x=line.split()
                 if x[2]+' '+x[3] == glb_user_name:
                     appos.append((x[0],x[1]))
-        print(appos)
         return appos
 
     def make_appo_btn(self):
@@ -227,6 +229,7 @@ class HomePage(Screen):
     def get_name(self):
         '''return user's name'''
         return glb_user_name
+        
     def restart(self):
         '''remove and add widget to refresh appointments list'''
         self.parent.remove_widget(self)
@@ -248,6 +251,7 @@ class HomePage(Screen):
         confirm_btn.bind(on_press=lambda *args: self.cancel_appo(day,time))
         back_btn.bind(on_press= self.popup.dismiss)
         return
+        
     def cancel_appo(self,day,time):
         ''' remove appointment from schedule file'''
         self.popup.dismiss()
@@ -260,6 +264,7 @@ class HomePage(Screen):
                     f.write(line)
         self.restart()
         return
+        
 class WindowManager(ScreenManager):
     pass
 
@@ -269,6 +274,7 @@ sm = WindowManager(transition = RiseInTransition())
 screens = [LoginWindow(name="login"), CreateAccount(name="create"), MainScreen(name='main')]
 for screen in screens:
     sm.add_widget(screen)
+    
 class Appointment_scheduling_appApp(App):
     def build(self):
         self.icon='logo.png'
