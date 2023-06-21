@@ -1,0 +1,222 @@
+#:import Label kivy.uix.label.Label
+#:import Button kivy.uix.button.Button
+
+
+<LoginWindow>
+    name: "login"
+
+    user_phone: phone_id
+    BoxLayout:
+        orientation: 'vertical'
+        Label:
+            text:'Appointment scheduling app'
+            background_color: 1,0.5,1,1
+            canvas.before:
+                Color:
+                    rgba: (0,0.3,0.5,1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: 'Hello'
+        MyTextInput:
+            id:phone_id
+            hint_text: "Phone number"
+            size_hint: (0.75,0.2)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            multiline: False
+        Label:
+            text: root.wrong_num
+            size_hint: (0.8,0.5)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            color: 1,0,0
+
+        RoundedButton:
+            text: 'submit'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (.8,.2)
+            on_press:
+                root.login_btn()
+        Label:
+            size_hint: (.8,.1)
+        RoundedButton:
+            text: 'sign in'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (.8, 0.2)
+            on_press:
+                root.manager.transition.duration = 1
+                root.create_btn()
+        Label:
+            size_hint: (.8, 0.1)
+
+
+<RoundedButton@Button>
+	background_color: (0,0,0,0)
+	background_normal: ''
+	canvas.before:
+		Color:
+			rgba: (0,0.3,0.5,1)
+		RoundedRectangle:
+			size: self.size
+			pos: self.pos
+			radius: [15]
+
+<MyTextInput@TextInput>:
+    font_size: '14dp'
+    background_color: (1,1,1,1)
+    border_color: (1,1,1,1)
+    background_normal: 'white.png'
+    background_active: 'white.png'
+    canvas.before:
+        Color:
+            rgba: (0,0,0,1)
+    canvas.after:
+        Color:
+            rgb: (1,1,1,1)
+        Ellipse:
+            angle_start:180
+            angle_end:360
+            pos:(self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Ellipse:
+            angle_start:360
+            angle_end:540
+            pos: (self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1])
+            size: (self.size[1], self.size[1])
+        Color:
+            rgba: (1,1,1,1)
+        Line:
+            points: self.pos[0] , self.pos[1], self.pos[0] + self.size[0], self.pos[1]
+        Line:
+            points: self.pos[0], self.pos[1] + self.size[1], self.pos[0] + self.size[0], self.pos[1] + self.size[1]
+        Line:
+            ellipse: self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 180, 360
+        Line:
+            ellipse: self.size[0] + self.pos[0] - self.size[1]/2.0, self.pos[1], self.size[1], self.size[1], 360, 540
+
+
+<CreateAccount>
+    name: "c"
+
+    user_name: name_id
+    user_phone: phone_id
+    BoxLayout:
+        orientation:'vertical'
+        Label:
+            text:'Appointment scheduling app'
+            background_color: 1,0.5,1,1
+            canvas.before:
+                Color:
+                    rgba: (0,0.3,0.5,1)
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "create account: "
+            size_hint: 1,0.3
+        MyTextInput:
+            id: name_id
+            size_hint: 0.75,0.2
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            multinline:False
+            hint_text: "Full name"
+        Label:
+            size_hint: 1,0.1
+        MyTextInput:
+            id: phone_id
+            size_hint: 0.75,0.2
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            multinline:False
+            hint_text: "Phone number"
+        Label:
+            text: root.wrong_num
+            color: 1,0,0
+            size_hint:1,0.3
+        RoundedButton:
+            text: 'submit'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (.8, 0.2)
+            on_press:
+                root.sign_btn()
+        Label:
+            size_hint: (.8, 0.1)
+        RoundedButton:
+            text: 'go back'
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            size_hint: (.8, 0.2)
+            on_press:
+                root.manager.transition.duration = 1
+                root.go_back_btn()
+        Label:
+            size_hint: (.8, 0.1)
+
+
+<MainScreen>
+    name: 'main'
+
+    on_enter: root.main()
+    grid: _grid
+    BoxLayout:
+        orientation:'vertical'
+        Label:
+            size_hint: 1, 0.3
+            text: 'Choose from the available appointments'
+        TabbedPanel:
+            do_default_tab: False
+            tab_pos: 'top_mid'
+            id: _grid
+        Label:
+            size_hint: 1,0.05
+        RoundedButton:
+            size_hint: 1, 0.2
+            text: 'go back'
+            on_press:
+                root.go_back()
+        Label:
+            size_hint: 1,0.05
+
+<HomePage>
+    name: 'home'
+    BoxLayout:
+        orientation:'vertical'
+        Label:
+            text: 'Hello ' + root.get_name()
+            size_text: 100
+        Label:
+        GridLayout:
+            cols:2
+            on_parent:
+                for i in root.home():\
+                self.add_widget(Label(text = f'You have an appointment in {i[0]} at {i[1]}', size_hint= (2,0.2))),\
+                self.add_widget(Button(text = 'cancel',size_hint= (0.5,0.2), on_release=lambda x, bound=i: root.cancel_pop(bound[0], bound[1])))
+        Label:
+        RoundedButton:
+            text: 'make appointment' if root.get_name() != 'owner' else 'show appointments'
+            size_hint: 0.8,0.5
+            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+            on_release: root.make_appo_btn()
+        Label:
+            size_hint: 0.8,0.1
+
+
+<CancelButton@Button>
+	background_color: (0,0,0,0)
+	background_normal: ''
+	size_hint: 0.3,1
+	canvas.before:
+		Color:
+			rgba: (1,0,0,1)
+		RoundedRectangle:
+			size: self.size
+			pos: self.pos
+			radius: [15]
+
+
+
+
+
+
+
+
+
+
